@@ -77,7 +77,7 @@
     if (event.data == YT.PlayerState.PLAYING && sended_youtube == 0){
       sended_youtube = 1;
       $.ajax({
-        url: "https://apidomain.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
+        url: "https://mydomain.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
         type: 'PUT',
         secure: true,
         success: function(data) {
@@ -92,7 +92,7 @@
 <script>
   jQuery("a").click(function() { 
     $.ajax({
-      url: "https://apidomain.com/event/llamada-telefono/"+jQuery("#contact_id").val(),
+      url: "https://mydomain.com/event/llamada-telefono/"+jQuery("#contact_id").val(),
       type: 'PUT',
       secure: true,
       success: function(data) {
@@ -109,7 +109,7 @@
     if ($(window).scrollTop() > (jQuery("body").height() / 2) && sended == 0) {
       sended = 1;
       $.ajax({
-        url: "https://apidomain.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
+        url: "https://mydomain.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
         type: 'PUT',
         secure: true,
         success: function(data) {
