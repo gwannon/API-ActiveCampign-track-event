@@ -48,7 +48,7 @@
                 <ul>
                   <li><b>contact_id:</b> id del contacto dentro de Active Campaign. Solo números [0-9]+</li>
                 </ul>
-                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apispri.enuttisworking.com/contact/email/61496</code></p>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apidomain.com/contact/email/61496</code></p>
                 <p class="alert alert-success">Respuesta OK (200):<br/><code>{"email":"jorge@enutt.net"}</code></p>
                 <p class="alert alert-danger">Respuesta ERROR (400): Usuario no existe<br/><code>{"status":"Error","message":"{contact_id} not exist","args":{"contact_id":"619999999999999999"}}</code></p>
                 <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":{"contact_id":"61496"}}</code></p>
@@ -69,7 +69,7 @@
                   <li><b>event_name:</b> Nombre del evento. Se han de dar de alta los eventos en Active Campaign antes de poder usarlos. Minúsculas, números y guiones [a-z0-9\-]+</li>
                   <li><b>contact_id:</b> id del contacto dentro de Active Campaign.  Solo números [0-9]+</li>
                 </ul>
-                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X PUT https://apispri.enuttisworking.com/event/interes-ayudas/61496</code></p>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X PUT https://apidomain.com/event/interes-ayudas/61496</code></p>
                 <p class="alert alert-success">Respuesta OK (200):<br/><code>{"status":"OK","args":{"event_name":"interes-ayudas","contact_id":"61496"}}</code></p>
                 <p class="alert alert-danger">Respuesta ERROR (400): Usuario no existe<br/><code>{"status":"Error","message":"{contact_id} not exist","args":{"event_name":"interes-ayudas","contact_id":"619999999999999999"}}</code></p>
                 <p class="alert alert-danger">Respuesta ERROR (400): Evento no existe<br/><code>{"status":"Error","message":"Not allowed {event name}","args":{"event_name":"interes-ayudas-no-existe","contact_id":"61496"}}</code></p>
@@ -86,7 +86,7 @@
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                 <p>Devuelve todos los eventos permitidos.</p>
-                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apispri.enuttisworking.com/event/all</code></p>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apidomain.com/event/all</code></p>
                 <p class="alert alert-success">Respuesta OK (200):<br/><code>["interes-ayudas","llamada-telefono"]</code></p>
                 <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":[]}</code></p>
                </div>
@@ -101,7 +101,7 @@
             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                 <p>Devuelve todos los sites desde los que está permitido hacer llamadas.</p>
-                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apispri.enuttisworking.com/site/all</code></p>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apidomain.com/site/all</code></p>
                 <p class="alert alert-success">Respuesta OK (200):<br/><code>["basquetrade.spri.eus","eenbasque.net","spri.enuttisworking.com","spri.eus","sprilur.spri.eus","upeuskadi.spri.eus"]</code></p>
                 <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":[]}</code></p>
                </div>
@@ -155,7 +155,7 @@
 <script>
 jQuery( document ).ready(function() {
   $.ajax({
-    url: 'https://apispri.enuttisworking.com/site/all',
+    url: 'https://apidomain.com/site/all',
     type: 'GET',
     secure: true,
     success: function(data) {
@@ -166,7 +166,7 @@ jQuery( document ).ready(function() {
   });
 
   $.ajax({
-    url: 'https://apispri.enuttisworking.com/event/all',
+    url: 'https://apidomain.com/event/all',
     type: 'GET',
     secure: true,
     success: function(data) {

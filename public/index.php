@@ -169,8 +169,7 @@ function getAllWhiteListedSites () {
     foreach ($result->siteTrackingDomains as $site)  {
         $sites[] = $site->name;
     }
-    $sites[] = 'www.enutt.net';
-    $sites[] = 'apispri.enuttisworking.com';
+    $sites[] = 'apidomain.com';
 	return $sites;
 }  
 
