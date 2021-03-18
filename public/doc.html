@@ -1,0 +1,182 @@
+<html>
+<head>
+	<title>Documentación API intermedia Active Campaign</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<style>
+    body {
+      background-color: #f1f1f1;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    h1, h2, h3, .btn {
+      font-family: 'Oswald', sans-serif;
+    }
+	</style>
+</head>
+<body>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col p-3 text-center">
+				<h1>Documentación API Intermedia Active Campaign</h1>
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                [GET] /contact/email/{contact_id}
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <p>Devuelve el email del usuario asociado a contact id de Active Campaign</p>
+                <p><b>Parametros:</b></p>
+                <ul>
+                  <li><b>contact_id:</b> id del contacto dentro de Active Campaign. Solo números [0-9]+</li>
+                </ul>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apispri.enuttisworking.com/contact/email/61496</code></p>
+                <p class="alert alert-success">Respuesta OK (200):<br/><code>{"email":"jorge@enutt.net"}</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Usuario no existe<br/><code>{"status":"Error","message":"{contact_id} not exist","args":{"contact_id":"619999999999999999"}}</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":{"contact_id":"61496"}}</code></p>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                [PUT] /event/{event_name}/{contact_id}
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <p>Asigna un evento a un usuario.</p>
+                <p><b>Parametros:</b></p>
+                <ul>
+                  <li><b>event_name:</b> Nombre del evento. Se han de dar de alta los eventos en Active Campaign antes de poder usarlos. Minúsculas, números y guiones [a-z0-9\-]+</li>
+                  <li><b>contact_id:</b> id del contacto dentro de Active Campaign.  Solo números [0-9]+</li>
+                </ul>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X PUT https://apispri.enuttisworking.com/event/interes-ayudas/61496</code></p>
+                <p class="alert alert-success">Respuesta OK (200):<br/><code>{"status":"OK","args":{"event_name":"interes-ayudas","contact_id":"61496"}}</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Usuario no existe<br/><code>{"status":"Error","message":"{contact_id} not exist","args":{"event_name":"interes-ayudas","contact_id":"619999999999999999"}}</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Evento no existe<br/><code>{"status":"Error","message":"Not allowed {event name}","args":{"event_name":"interes-ayudas-no-existe","contact_id":"61496"}}</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":{"event_name":"interes-ayudas-","contact_id":"61496"}}</code></p>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                [GET] /event/all
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <p>Devuelve todos los eventos permitidos.</p>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apispri.enuttisworking.com/event/all</code></p>
+                <p class="alert alert-success">Respuesta OK (200):<br/><code>["interes-ayudas","llamada-telefono"]</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":[]}</code></p>
+               </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                [GET] /site/all
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <p>Devuelve todos los sites desde los que está permitido hacer llamadas.</p>
+                <p class="alert alert-primary">Ejemplo CURL:<br/><code>curl --referer https://spri.eus -X GET https://apispri.enuttisworking.com/site/all</code></p>
+                <p class="alert alert-success">Respuesta OK (200):<br/><code>["basquetrade.spri.eus","eenbasque.net","spri.enuttisworking.com","spri.eus","sprilur.spri.eus","upeuskadi.spri.eus"]</code></p>
+                <p class="alert alert-danger">Respuesta ERROR (400): Referer no permitido<br/><code>{"status":"Error","message":"Not allowed referer","args":[]}</code></p>
+               </div>
+            </div>
+          </div>
+        </div>
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="container">
+		<div class="row">
+      <div class="col-md-4 py-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Script de prueba</h5>
+            <p class="card-text">Envía dos eventos al usuario que está en campo de formulario. Uno (llamada-telefono) cuando pinchas en el botón de "Llamar por teléfono" (todas las veces que se pinche) y otro (interes-ayudas) al hacer scroll (solo una vez) o darle al play del video (solo una vez). </p>
+            <a href="https://www.enutt.net/prueba_api_spri.html" target="_blank" class="btn btn-primary">Ver ejemplo</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 py-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">API Active Campaign</h5>
+            <p class="card-text">Esta API intermedia trabaja contra la versión 3 de la API de Active Campaign.</p>
+            <a href="https://developers.activecampaign.com/reference" target="_blank" class="btn btn-primary">Ver documentación</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 py-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Sites permitidos</h5>
+            <ul class="card-text" id="allowedsites"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 py-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Eventos permitidos</h5>
+            <ul class="card-text" id="allowedevents"></ul>
+          </div>
+        </div>
+      </div>
+		</div>
+	</div>
+</section>
+<script>
+jQuery( document ).ready(function() {
+  $.ajax({
+    url: 'https://apispri.enuttisworking.com/site/all',
+    type: 'GET',
+    secure: true,
+    success: function(data) {
+      jQuery.each(JSON.parse(data), function(index, value){
+        jQuery("#allowedsites").append("<li>"+value+"</li>");
+      });
+    }
+  });
+
+  $.ajax({
+    url: 'https://apispri.enuttisworking.com/event/all',
+    type: 'GET',
+    secure: true,
+    success: function(data) {
+      var obj = JSON.parse(data);
+      jQuery.each(JSON.parse(data), function(index, value){
+        jQuery("#allowedevents").append("<li>"+value+"</li>");
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

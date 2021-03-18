@@ -1,0 +1,125 @@
+<html>
+<head>
+	<title>Ejemplo API intermedia Active Campign</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<style>
+    body {
+      background-color: #f1f1f1;
+      font-family: 'Open Sans', sans-serif;
+      height: 300vh;
+    }
+
+    h1, h2, h3, .btn {
+      font-family: 'Oswald', sans-serif;
+    }
+	</style>
+</head>
+<body>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col p-3 text-center">
+				Contacto ID<br/>
+				<input id="contact_id" type="number" value="61496"><br/><br/>
+				<h2>Haz click en el enlace para activar el evento "llamada-telefono".</h2>
+				<a class="btn btn-primary" href="tel:+34000000000">Llamar por tel&eacute;fono</a>
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col p-3 text-center">	
+				<h2>Haz play en el v&iacute;deo para activar el evento "interes-ayuda".</h2>
+				<div id="player"></div>
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col p-3 text-center">			
+				<h2>Haz scroll hasta abajo para activar el evento "interes-ayuda".</h2>
+			</div>
+		</div>
+	</div>
+</section>
+<script>
+  var sended_youtube = 0;
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      height: '360',
+      width: '640',
+      videoId: '7fu4da887zY',
+      events: {
+        /* 'onReady': onPlayerReady, */
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING && sended_youtube == 0){
+      sended_youtube = 1;
+      $.ajax({
+        url: "https://apispri.enuttisworking.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
+        type: 'PUT',
+        secure: true,
+        success: function(data) {
+          var obj = JSON.parse(data);
+          console.log(obj.args);
+          alert('Evento reproducir video: evento '+obj.args.event_name+' insertado en contacto '+obj.args.contact_id);
+        }
+      });
+    }
+  }
+</script>
+<script>
+  jQuery("a").click(function() { 
+    $.ajax({
+      url: "https://apispri.enuttisworking.com/event/llamada-telefono/"+jQuery("#contact_id").val(),
+      type: 'PUT',
+      secure: true,
+      success: function(data) {
+        var obj = JSON.parse(data);
+        console.log(obj.args);
+        alert('Click llamada: evento '+obj.args.event_name+' insertado en contacto '+obj.args.contact_id);
+      }
+    });
+  });
+</script>
+<script>
+  var sended = 0;
+  jQuery(window).scroll(function () {
+    if ($(window).scrollTop() > (jQuery("body").height() / 2) && sended == 0) {
+      sended = 1;
+      $.ajax({
+        url: "https://apispri.enuttisworking.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
+        type: 'PUT',
+        secure: true,
+        success: function(data) {
+          var obj = JSON.parse(data);
+          console.log(obj.args);
+          alert('Evento Scroll 50%: evento '+obj.args.event_name+' insertado en contacto '+obj.args.contact_id);
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
