@@ -31,18 +31,19 @@ class ApiActiveCampaign {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Api-Token: '.AC_API_TOKEN));
     $result = json_decode(curl_exec($curl));
-      $sites = array();
-      foreach ($result->siteTrackingDomains as $site)  {
-          $sites[] = $site->name;
-      }
-    $sites[] = 'mydomain.com';
+    $sites = array();
+    foreach ($result->siteTrackingDomains as $site)  {
+        $sites[] = $site->name;
+    }
+    $sites[] = 'enutt.net';
+    $sites[] = 'apispri.enuttisworking.com';
     return $sites;
   }  
 
   public function checkAllowedReferer () {
     $refData = parse_url($_SERVER['HTTP_REFERER']);
     $allowed_referers = self::getAllWhiteListedSites();
-    if (in_array($refData['host'], $allowed_referers)) return true;
+    if (in_array(str_replace("www.", "", $refData['host']), $allowed_referers)) return true;
     else return false;
   }
 
