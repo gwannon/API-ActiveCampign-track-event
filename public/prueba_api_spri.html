@@ -29,7 +29,10 @@
 				Contacto ID<br/>
 				<input id="contact_id" type="number" value="61496"><br/><br/>
 				<h2>Haz click en el enlace para activar el evento "llamada-telefono".</h2>
-				<a class="btn btn-primary" href="tel:+34000000000">Llamar por tel&eacute;fono</a>
+				<a class="btn btn-primary" href="tel:+34000000000">Llamar por tel&eacute;fono</a><br/><br/>
+        <button id="addautom" class="btn btn-secondary">Añadir 5 puntos a Interes Digitalización (automatización 116)</button><br/><br/>
+        <button id="addtag" class="btn btn-secondary">Añadir etiqueta inscripcion-evento (tag 173)</button><br/><br/>
+        <button id="deletetag" class="btn btn-secondary">Quitar etiqueta inscripcion-evento (tag 173)</button>
 			</div>
 		</div>
 	</div>
@@ -77,7 +80,7 @@
     if (event.data == YT.PlayerState.PLAYING && sended_youtube == 0){
       sended_youtube = 1;
       $.ajax({
-        url: "https://mydomain.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
+        url: "https://apispri.enuttisworking.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
         type: 'PUT',
         secure: true,
         success: function(data) {
@@ -92,7 +95,7 @@
 <script>
   jQuery("a").click(function() { 
     $.ajax({
-      url: "https://mydomain.com/event/llamada-telefono/"+jQuery("#contact_id").val(),
+      url: "https://apispri.enuttisworking.com/event/llamada-telefono/"+jQuery("#contact_id").val(),
       type: 'PUT',
       secure: true,
       success: function(data) {
@@ -109,7 +112,7 @@
     if ($(window).scrollTop() > (jQuery("body").height() / 2) && sended == 0) {
       sended = 1;
       $.ajax({
-        url: "https://mydomain.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
+        url: "https://apispri.enuttisworking.com/event/interes-ayudas/"+jQuery("#contact_id").val(),
         type: 'PUT',
         secure: true,
         success: function(data) {
@@ -119,6 +122,48 @@
         }
       });
     }
+  });
+</script>
+<script>
+  jQuery("button#addautom").click(function() { 
+    $.ajax({
+      url: "https://apispri.enuttisworking.com/automation/"+jQuery("#contact_id").val()+"/128",
+      type: 'PUT',
+      secure: true,
+      success: function(data) {
+        var obj = JSON.parse(data);
+        console.log(obj.args);
+        alert('Click botón: automatización '+obj.args.automation_id+' ejecutada en contacto '+obj.args.contact_id);
+      }
+    });
+  });
+</script>
+<script>
+  jQuery("button#addtag").click(function() { 
+    $.ajax({
+      url: "https://apispri.enuttisworking.com/tag/"+jQuery("#contact_id").val()+"/173",
+      type: 'PUT',
+      secure: true,
+      success: function(data) {
+        var obj = JSON.parse(data);
+        console.log(obj.args);
+        alert('Click botón: etiqueta '+obj.args.tag_id+' asignada en contacto '+obj.args.contact_id);
+      }
+    });
+  });
+</script>
+<script>
+  jQuery("button#deletetag").click(function() { 
+    $.ajax({
+      url: "https://apispri.enuttisworking.com/tag/"+jQuery("#contact_id").val()+"/173",
+      type: 'DELETE',
+      secure: true,
+      success: function(data) {
+        var obj = JSON.parse(data);
+        console.log(obj.args);
+        alert('Click botón: etiqueta '+obj.args.tag_id+' quitada del contacto '+obj.args.contact_id);
+      }
+    });
   });
 </script>
 </body>
