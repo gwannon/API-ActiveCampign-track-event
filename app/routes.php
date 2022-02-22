@@ -17,6 +17,8 @@ return function (App $app) {
 
   $app->get('/event/all', function (Request $request, Response $response, array $args) {
     if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
       $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
       return $response;    
     }
@@ -28,6 +30,8 @@ return function (App $app) {
 
   $app->put('/event/{event_name:[a-z0-9\-]+}/{contact_id:[0-9]+}', function (Request $request, Response $response, array $args) use ($app) {
     if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
       $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
       return $response;    
     }
@@ -78,6 +82,8 @@ return function (App $app) {
 
   $app->get('/contact/email/{contact_id:[0-9]+}', function (Request $request, Response $response, array $args) {
     if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
       $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
       return $response;    
     }
@@ -92,6 +98,8 @@ return function (App $app) {
 
   $app->get('/site/all', function (Request $request, Response $response, array $args) {
     if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
       $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
       return $response;    
     }
@@ -100,4 +108,148 @@ return function (App $app) {
     $response->getBody()->write(json_encode($sites));
     return $response;
   });
+  
+  $app->put('/automation/{contact_id:[0-9]+}/{automation_id:[0-9\,]+}', function (Request $request, Response $response, array $args) use ($app) {
+    if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
+      $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
+      return $response;    
+    }
+
+		foreach (explode(",", $args['automation_id']) as $automation_id) {
+			$data['contactAutomation'] = [
+		    "contact" => $args['contact_id'],
+		    "automation" => $automation_id
+		  ];
+		  
+		  $payload = json_encode($data);
+		  $curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, AC_API_DOMAIN."/api/3/contactAutomations");
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Api-Token: '.AC_API_TOKEN));
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
+		  $result = curl_exec($curl);
+		  if ($result !== false) {
+		    $result = json_decode($result);
+		    if ($result->contacts[0]->id == $args['contact_id']) {
+		      $body['status'] = 'OK';
+		    } else {
+		      $response = CallApiActiveCampaign::responseError($response, 'ActiveCAmpaign API not avaliable', $args, 400);
+          return $response;
+		    }
+		  } else {
+		    $response = CallApiActiveCampaign::responseError($response, 'ActiveCAmpaign API not avaliable', $args, 400);
+        return $response;
+		  }
+
+		  $body['args'] = $args;
+		}
+		$response->getBody()->write(json_encode($body));
+    return $response;
+  });
+    
+  $app->put('/tag/{contact_id:[0-9]+}/{tag_id:[0-9\,]+}', function (Request $request, Response $response, array $args) use ($app) {
+    if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
+      $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
+      return $response;    
+    }
+
+		foreach (explode(",", $args['tag_id']) as $tag_id) {
+      $data['contactTag'] = [
+        "contact" => $args['contact_id'],
+        "tag"     => $tag_id
+      ];
+		  
+		  $payload = json_encode($data);
+		  $curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, AC_API_DOMAIN."/api/3/contactTags");
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Api-Token: '.AC_API_TOKEN));
+			curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
+		  $result = curl_exec($curl);
+		  if ($result !== false) {
+		    $result = json_decode($result);
+		    if ($result->contacts[0]->id == $args['contact_id'] || $result->contactTag->id > 0) {
+		      $body['status'] = 'OK';
+		    } else {
+		      $response = CallApiActiveCampaign::responseError($response, 'ActiveCAmpaign API not avaliable', $args, 400);
+          return $response;
+		    }
+		  } else {
+		    $response = CallApiActiveCampaign::responseError($response, 'ActiveCAmpaign API not avaliable', $args, 400);
+        return $response;
+		  }
+
+		  $body['args'] = $args;
+ 	  }
+		$response->getBody()->write(json_encode($body));
+    return $response;
+  });
+  
+  $app->delete('/tag/{contact_id:[0-9]+}/{tag_id:[0-9\,]+}', function (Request $request, Response $response, array $args) use ($app) {
+    if(!CallApiActiveCampaign::checkAllowedReferer ()) {
+      $refData = parse_url($_SERVER['HTTP_REFERER']);
+      $args['host'] = $refData['host'];
+      $response = CallApiActiveCampaign::responseError($response, 'Not allowed referer', $args, 400);
+      return $response;    
+    }
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, AC_API_DOMAIN."/api/3/contacts/".$args['contact_id']."/contactTags");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Api-Token: '.AC_API_TOKEN));
+    $responseTags = curl_exec($curl);
+    $userTags = json_decode($responseTags)->contactTags;
+    curl_close($curl);
+    foreach($userTags as $userTag) {
+      $tags[$userTag->tag] = $userTag->id;
+    }
+
+		foreach (explode(",", $args['tag_id']) as $tag_id) {
+      if(isset($tags[$tag_id])) {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, AC_API_DOMAIN."/api/3/contactTags/".$tags[$tag_id]);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Api-Token: '.AC_API_TOKEN));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+        $result = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if (in_array($httpcode, array(200, 201))) {
+          $body['status'] = 'OK';
+        } else {
+          $response = CallApiActiveCampaign::responseError($response, 'ActiveCAmpaign API not avaliable', $args, 400);
+          return $response;
+        }
+      }
+      $body['args'] = $args;
+		}
+		$response->getBody()->write(json_encode($body));
+    return $response;
+  });
+  //curl --referer https://spri.eus -X PUT https://apispri.enuttisworking.com/tag/61496/173,174
+  //curl --referer https://spri.eus -X DELETE https://apispri.enuttisworking.com/tag/61496/173,174
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 };
